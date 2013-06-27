@@ -1,6 +1,6 @@
 "============================================================================
-"File:        dart_analyzer.vim
-"Description: Dart syntax checker - using dart_analyzer
+"File:        dartanalyzer.vim
+"Description: Dart syntax checker - using dartanalyzer
 "Maintainer:  Maksim Ryzhikov <rv.maksim at gmail dot com>
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
@@ -8,34 +8,34 @@
 "             Want To Public License, Version 2, as published by Sam Hocevar.
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "============================================================================
-if exists("g:loaded_syntastic_dart_dart_analyzer_checker")
+if exists("g:loaded_syntastic_dart_dartanalyzer_checker")
     finish
 endif
-let g:loaded_syntastic_dart_dart_analyzer_checker=1
+let g:loaded_syntastic_dart_dartanalyzer_checker=1
 
-if !exists("g:syntastic_dart_analyzer_conf")
-    let g:syntastic_dart_analyzer_conf = ''
+if !exists("g:syntastic_dartanalyzer_conf")
+    let g:syntastic_dartanalyzer_conf = ''
 endif
 
-function! SyntaxCheckers_dart_dart_analyzer_IsAvailable()
-    return executable("dart_analyzer")
+function! SyntaxCheckers_dart_dartanalyzer_IsAvailable()
+    return executable("dartanalyzer")
 endfunction
 
-function! SyntaxCheckers_dart_dart_analyzer_GetHighlightRegex(error)
+function! SyntaxCheckers_dart_dartanalyzer_GetHighlightRegex(error)
     let lcol = a:error['col'] - 1
     let rcol = a:error['nr'] + lcol + 1
 
     return '\%>'.lcol.'c\%<'.rcol.'c'
 endfunction
 
-function! SyntaxCheckers_dart_dart_analyzer_GetLocList()
-    let args = !empty(g:syntastic_dart_analyzer_conf) ? ' ' . g:syntastic_dart_analyzer_conf : ''
+function! SyntaxCheckers_dart_dartanalyzer_GetLocList()
+    let args = !empty(g:syntastic_dartanalyzer_conf) ? ' ' . g:syntastic_dartanalyzer_conf : ''
     let makeprg = syntastic#makeprg#build({
-        \ 'exe': 'dart_analyzer',
-        \ 'args': '--error_format machine',
+        \ 'exe': 'dartanalyzer',
+        \ 'args': '--machine',
         \ 'post_args': args,
         \ 'filetype': 'dart',
-        \ 'subchecker': 'dart_analyzer' })
+        \ 'subchecker': 'dartanalyzer' })
 
     " Machine readable format looks like:
     " SEVERITY|TYPE|ERROR_CODE|file:FILENAME|LINE_NUMBER|COLUMN|LENGTH|MESSAGE
@@ -49,7 +49,7 @@ function! SyntaxCheckers_dart_dart_analyzer_GetLocList()
     " MESSAGE: String
 
     " We use %n to grab the error length to be able to access it in the matcher.
-    let commonformat = '|%.%#|%.%#|file:%f|%l|%c|%n|%m'
+    let commonformat = '|%.%#|%.%#|%f|%l|%c|%n|%m'
 
     " TODO(amouravski): simply take everything after ERROR|WARNING as a message
     " and then parse it by hand later.
@@ -63,4 +63,4 @@ endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'dart',
-    \ 'name': 'dart_analyzer'})
+    \ 'name': 'dartanalyzer'})
